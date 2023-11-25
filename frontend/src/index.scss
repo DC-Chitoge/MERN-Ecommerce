@@ -6,29 +6,37 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-header {
-  background-color: #404040;
-  padding: 1rem;
-  a {
-    color: #ffffff;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-  }
+.site-container {
+  min-height: 100vh;
 }
 main {
-  padding: 1rem;
+  flex: 1;
   .products {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    .rating span {
+      color: #ffc000;
+    }
+    .btn-primary {
+      background-color: white;
+      border: 1px solid orange;
+      color: black;
+      &:hover {
+        background-color: orange;
+        color: white;
+      }
+    }
+
     .product {
       border: 1px solid #404040;
       margin: 1rem;
       img {
         width: 100%;
         max-width: 300px;
+      }
+      .img-large {
+        max-width: 100%;
       }
       .product-info {
         padding: 1rem;

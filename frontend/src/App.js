@@ -1,31 +1,36 @@
-import data from './data';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import HomeScreen from './Component/HomeScreen';
+import ProductScreen from './Component/ProductScreen';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import { LinkContainer } from 'react-router-bootstrap';
 
 function App() {
   return (
-    <div>
-      <header>
-        <a href="/">ThuongMaiDienTu</a>
-      </header>
-      <main>
-        <h1>List Products</h1>
-        <div className="products">
-          {data.products.map((product) => (
-            <div className="product" key={product.slug}>
-              <a href={`/product/${product.slug}`}>
-                <img src={product.image} alt={product.name} />
-              </a>
-              <div className="product-info">
-                <a href={`/product/${product.slug}`}>
-                  <p>{product.name}</p>
-                </a>
-                <p className="product-price">${product.price}</p>
-                <button>Thêm vào giỏ hàng</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className="d-flex flex-column site-container">
+        <header>
+          <Navbar bg="dark" variant="dark">
+            <Container className="mt-3">
+              <LinkContainer to="/">
+                <Navbar.Brand>Home</Navbar.Brand>
+              </LinkContainer>
+            </Container>
+          </Navbar>
+        </header>
+        <main>
+          <Container>
+            <Routes>
+              <Route path="/" element={<HomeScreen />} />
+              <Route path="/product/:slug" element={<ProductScreen />} />
+            </Routes>
+          </Container>
+        </main>
+        <footer>
+          <div className="text-center">Đồ án Website thương mại điện tử</div>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
