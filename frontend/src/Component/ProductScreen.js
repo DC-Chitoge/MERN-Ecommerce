@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useEffect, useReducer } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useReducer, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
@@ -10,6 +10,10 @@ import Button from 'react-bootstrap/Button';
 import Rating from './Rating';
 import { Helmet } from 'react-helmet-async';
 import './ProductScreen.scss';
+import LoadingBox from './LoadingBox';
+import MessageBox from './MessageBox';
+import { getError } from './getError';
+import { Store } from '../Store';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -26,6 +30,7 @@ const reducer = (state, action) => {
 
 function ProductScreen() {
   const params = useParams();
+  const navigate = useNavigate();
   const { slug } = params;
   const [{ loading, error, product }, dispatch] = useReducer(reducer, {
     product: [],
@@ -39,17 +44,34 @@ function ProductScreen() {
         const result = await axios.get(`/api/products/slug/${slug}`);
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: err.message });
+        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
 
       // setProducts(result.data);
     };
     fetchData();
   }, [slug]);
+  //Cart
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { cart } = state;
+  const addToCartHandler = async () => {
+    const existItem = cart.cartItems.find((x) => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    ctxDispatch({
+      type: 'CART_ADD_ITEM',
+      payload: { ...product, quantity },
+    });
+    navigate('/cart');
+  };
   return loading ? (
-    <div>Loading...</div>
+    <LoadingBox />
   ) : error ? (
-    <div>{error}</div>
+    <MessageBox variant="danger">{error}</MessageBox>
   ) : (
     <div>
       <h1>{slug}</h1>
@@ -108,7 +130,11 @@ function ProductScreen() {
                 {product.countInStock > 0 && (
                   <ListGroup.Item>
                     <div className="d-grid">
-                      <Button variant="primary" className="btn-productSreen">
+                      <Button
+                        onClick={addToCartHandler}
+                        variant="primary"
+                        className="btn-productSreen"
+                      >
                         Thêm vào giỏ hàng
                       </Button>
                     </div>

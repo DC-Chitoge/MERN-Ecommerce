@@ -7,6 +7,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Product from './Product';
 import { Helmet } from 'react-helmet-async';
+import MessageBox from './MessageBox';
+import LoadingBox from './LoadingBox';
 
 // các trường hợp loading web
 const reducer = (state, action) => {
@@ -51,9 +53,9 @@ function HomeScreen() {
       <h1>List Products</h1>
       <div className="products">
         {loading ? (
-          <div>Loading...</div>
+          <LoadingBox />
         ) : error ? (
-          <div>{error}</div>
+          <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
             {products.map((product) => (
