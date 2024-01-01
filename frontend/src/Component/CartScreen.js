@@ -38,7 +38,7 @@ export default function CartScreen() {
   return (
     <div>
       <Helmet>
-        <title>Shopping Cart</title>
+        <title>Giỏ hàng</title>
       </Helmet>
       <h1>Giỏ Hàng</h1>
       <Row>
@@ -102,8 +102,8 @@ export default function CartScreen() {
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>
-                    Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
-                    items) : $
+                    Tổng tiền ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
+                    sản phẩm) : $
                     {cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
                   </h3>
                 </ListGroup.Item>
